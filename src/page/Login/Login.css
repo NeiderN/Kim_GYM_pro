@@ -1,0 +1,318 @@
+/* ─────────────────────────────────────────
+   Login.css — Estilos del componente Login
+   Basado en el Design System de GymControl
+   ───────────────────────────────────────── */
+
+
+/* ── Reset base ── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Contenedor raíz ── */
+.login-root {
+  min-height: 100vh;
+  background-color: var(--color-dark-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  display: flex;
+}
+
+/* ── Layout principal ── */
+.login-main {
+  flex: 1;
+  display: flex;
+}
+
+/* ═══════════════════════════════
+   PANEL IZQUIERDO
+═══════════════════════════════ */
+.login-left {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 80px;
+  overflow: hidden;
+  border-right: 1px solid var(--color-border);
+}
+
+.login-glow {
+  position: absolute;
+  top: -120px;
+  left: -120px;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 255, 71, 0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.login-left-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  text-align: left;
+}
+
+/* Marca */
+.login-brand-name {
+  font-family: var(--font-display);
+  font-size: 52px;
+  font-weight: 400;
+  letter-spacing: 8px;
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.login-brand-sub {
+  font-size: 11px;
+  letter-spacing: 8px;
+  color: var(--color-muted);
+  margin-top: 8px;
+  font-weight: 400;
+}
+
+/* Pitch */
+.login-pitch {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.login-pitch-line {
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+.login-pitch-accent {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-accent);
+  line-height: 1.3;
+}
+
+/* Lista de features */
+.login-feature-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--color-muted);
+}
+
+.login-bullet {
+  color: var(--color-accent);
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Marca de agua */
+.login-watermark {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 260px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.04);
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+  letter-spacing: -10px;
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════
+   PANEL DERECHO
+═══════════════════════════════ */
+.login-right {
+  width: 560px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10) 80px;
+  background-color: var(--color-dark-bg);
+}
+
+.login-form-card {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Encabezado */
+.login-form-title {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 400;
+  letter-spacing: 6px;
+  color: var(--color-white);
+  line-height: 1;
+  text-align: center;
+}
+
+.login-form-sub {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--color-muted);
+  margin: var(--space-2) 0 var(--space-8);
+  text-align: center;
+}
+
+/* Formulario */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.login-label {
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--color-muted);
+  font-weight: 500;
+  text-align: center;
+}
+
+.login-input {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-input);
+  padding: 14px var(--space-4);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: var(--font-body);
+  width: 100%;
+}
+
+.login-input:focus {
+  border-color: var(--color-accent);
+}
+
+.login-forgot-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -8px;
+}
+
+.login-forgot-link {
+  font-size: 12px;
+  color: var(--color-accent);
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 300;
+}
+
+/* Botón primario */
+.login-submit-btn {
+  background-color: var(--color-accent);
+  color: var(--color-black);
+  border: none;
+  border-radius: var(--r-btn);
+  padding: 16px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: opacity 0.2s, transform 0.1s;
+  margin-top: var(--space-1);
+  width: 100%;
+}
+
+.login-submit-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.login-submit-btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Selector de roles ── */
+.login-role-section {
+  margin-top: var(--space-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.login-role-label {
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--color-muted);
+  font-weight: 500;
+  text-align: center;
+}
+
+.login-role-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.login-role-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px var(--space-4);
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-btn);
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.15s;
+}
+
+.login-role-btn:hover {
+  border-color: var(--color-accent);
+}
+
+.login-role-btn.active {
+  border: 1px solid var(--color-accent);
+  background-color: var(--color-accent-dim);
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.login-role-icon {
+  font-size: 15px;
+}
