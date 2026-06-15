@@ -220,6 +220,17 @@
   padding: 6px 12px;
 }
 
+.dash-sidebar-user {
+  background-color: #1a1b1f;
+  border-radius: var(--r-card);
+  margin: 8px;
+  padding: 12px;
+  margin-top: 12px;
+  padding-top: 16px;
+  position: relative;
+  cursor: pointer;
+}
+
 .dash-search-icon {
   font-size: 12px;
   color: var(--color-muted);
@@ -248,6 +259,16 @@
   cursor: pointer;
   padding: 4px;
   line-height: 1;
+}
+
+.dash-sidebar-user::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--color-border);
 }
 
 .dash-notif-badge {

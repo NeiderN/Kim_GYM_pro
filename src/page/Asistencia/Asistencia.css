@@ -1,0 +1,507 @@
+/* ─────────────────────────────────────────
+   Asistencia.css — Pantalla de Asistencia
+   GymControl Pro System
+   ───────────────────────────────────────── */
+
+.asis-root {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #0A0A0A;
+  color: #E8E9ED;
+  font-family: var(--font-body);
+}
+
+/* ════════════════════════════════
+   SIDEBAR
+════════════════════════════════ */
+.asis-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background-color: #111214;
+  border-right: 1px solid #2A2B30;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.asis-sidebar-brand {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid #2A2B30;
+}
+
+.asis-brand-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: #E8FF47;
+  line-height: 1;
+}
+
+.asis-brand-sub {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: #6B6D78;
+  margin-top: 4px;
+}
+
+.asis-nav {
+  flex: 1;
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.asis-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.asis-nav-section {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #6B6D78;
+  font-weight: 500;
+  padding: 0 20px 6px;
+}
+
+.asis-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #6B6D78;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  width: 100%;
+  text-align: left;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+}
+
+.asis-nav-item:hover {
+  color: #E8E9ED;
+  background-color: rgba(255,255,255,0.04);
+}
+
+.asis-nav-item.active {
+  color: #E8FF47;
+  border-left: 2px solid #E8FF47;
+  background-color: rgba(232, 255, 71, 0.06);
+  font-weight: 500;
+}
+
+.asis-nav-icon {
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+}
+
+.asis-sidebar-user {
+  background-color: #1a1b1f;
+  border-radius: 10px;
+  margin: 8px;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  margin-top: 12px;
+  padding-top: 16px;
+}
+
+.asis-sidebar-user::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #2A2B30;
+}
+
+.asis-avatar-sidebar {
+  width: 34px;
+  height: 34px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  background-color: #E8FF47;
+  color: #0A0A0A;
+  flex-shrink: 0;
+}
+
+.asis-user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.asis-user-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #E8E9ED;
+}
+
+.asis-user-role {
+  font-size: 10px;
+  color: #6B6D78;
+  font-weight: 300;
+}
+
+.asis-user-menu {
+  background: none;
+  border: none;
+  color: #6B6D78;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* ════════════════════════════════
+   MAIN
+════════════════════════════════ */
+.asis-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.asis-topbar {
+  height: 56px;
+  background-color: #111214;
+  border-bottom: 1px solid #2A2B30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.asis-page-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 3px;
+  color: #E8FF47;
+  margin: 0;
+}
+
+.asis-title-date {
+  color: #ffffff;
+  letter-spacing: 2px;
+}
+
+.asis-topbar-right {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.asis-counter-value {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  color: #E8FF47;
+  line-height: 1;
+}
+
+.asis-counter-label {
+  font-size: 12px;
+  color: #6B6D78;
+  font-weight: 300;
+}
+
+/* ════════════════════════════════
+   CONTENIDO
+════════════════════════════════ */
+.asis-content {
+  flex: 1;
+  padding: 24px 28px;
+  overflow-y: auto;
+}
+
+.asis-layout {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* Card base */
+.asis-card {
+  background-color: #18191D;
+  border: 1px solid #2A2B30;
+  border-radius: 10px;
+  padding: 24px;
+}
+
+/* ════════════════════════════════
+   PANEL REGISTRAR INGRESO
+════════════════════════════════ */
+.asis-register-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+  text-align: center;
+}
+
+.asis-door-icon {
+  font-size: 56px;
+  margin-bottom: 8px;
+}
+
+.asis-register-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.asis-register-sub {
+  font-size: 13px;
+  font-weight: 300;
+  color: #6B6D78;
+  margin: 0;
+}
+
+.asis-search-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 360px;
+  margin-top: 8px;
+}
+
+.asis-input {
+  flex: 1;
+  background-color: #111214;
+  border: 1px solid #2A2B30;
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 14px;
+  font-weight: 300;
+  color: #E8E9ED;
+  outline: none;
+  font-family: var(--font-mono);
+  letter-spacing: 2px;
+  transition: border-color 0.2s;
+}
+
+.asis-input:focus {
+  border-color: #E8FF47;
+}
+
+.asis-input::placeholder {
+  color: #6B6D78;
+  letter-spacing: 2px;
+  font-family: var(--font-mono);
+}
+
+.asis-search-btn {
+  background-color: #E8FF47;
+  color: #0A0A0A;
+  border: none;
+  border-radius: 8px;
+  width: 48px;
+  height: 48px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  flex-shrink: 0;
+}
+
+.asis-search-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Resultado */
+.asis-resultado {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 360px;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-top: 8px;
+  text-align: left;
+}
+
+.asis-resultado--ok {
+  background-color: rgba(61, 255, 160, 0.08);
+  border: 1px solid rgba(61, 255, 160, 0.25);
+}
+
+.asis-resultado--denegado {
+  background-color: rgba(255, 71, 71, 0.08);
+  border: 1px solid rgba(255, 71, 71, 0.25);
+}
+
+.asis-resultado-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.asis-resultado-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.asis-resultado-nombre {
+  font-size: 14px;
+  font-weight: 600;
+  color: #3DFFA0;
+}
+
+.asis-resultado--denegado .asis-resultado-nombre {
+  color: #FF4747;
+}
+
+.asis-resultado-meta {
+  font-size: 11px;
+  font-weight: 300;
+  color: #6B6D78;
+  font-family: var(--font-mono);
+}
+
+/* ════════════════════════════════
+   PANEL INGRESOS DE HOY
+════════════════════════════════ */
+.asis-list-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.asis-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.asis-card-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+  margin: 0;
+}
+
+.asis-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  background-color: rgba(232, 255, 71, 0.12);
+  color: #E8FF47;
+  border: 1px solid rgba(232, 255, 71, 0.3);
+  border-radius: 20px;
+  padding: 4px 10px;
+}
+
+.asis-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.asis-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #2A2B30;
+  transition: background-color 0.15s;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.asis-list-item:last-child {
+  border-bottom: none;
+}
+
+.asis-list-item:hover {
+  background-color: rgba(232, 255, 71, 0.03);
+  padding-left: 6px;
+}
+
+.asis-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.asis-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.asis-item-nombre {
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.asis-item-meta {
+  font-size: 11px;
+  font-weight: 300;
+  color: #6B6D78;
+}
+
+.asis-item-meta--bloqueado {
+  color: #FF4747;
+  font-weight: 500;
+}
+
+.asis-item-time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.asis-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.asis-time {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #6B6D78;
+}

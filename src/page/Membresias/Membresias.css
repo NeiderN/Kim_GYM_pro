@@ -1,0 +1,606 @@
+/* ─────────────────────────────────────────
+   Membresias.css — Pantalla de Membresías
+   GymControl Pro System
+   ───────────────────────────────────────── */
+
+.mem-root {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #0A0A0A;
+  color: #E8E9ED;
+  font-family: var(--font-body);
+}
+
+/* ════════════════════════════════
+   SIDEBAR
+════════════════════════════════ */
+.mem-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background-color: #111214;
+  border-right: 1px solid #2A2B30;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.mem-sidebar-brand {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid #2A2B30;
+}
+
+.mem-brand-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: #E8FF47;
+  line-height: 1;
+}
+
+.mem-brand-sub {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: #6B6D78;
+  margin-top: 4px;
+}
+
+.mem-nav {
+  flex: 1;
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.mem-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mem-nav-section {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #6B6D78;
+  font-weight: 500;
+  padding: 0 20px 6px;
+}
+
+.mem-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #6B6D78;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  width: 100%;
+  text-align: left;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+}
+
+.mem-nav-item:hover {
+  color: #E8E9ED;
+  background-color: rgba(255,255,255,0.04);
+}
+
+.mem-nav-item.active {
+  color: #E8FF47;
+  border-left: 2px solid #E8FF47;
+  background-color: rgba(232, 255, 71, 0.06);
+  font-weight: 500;
+}
+
+.mem-nav-icon {
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+}
+
+.mem-sidebar-user {
+  background-color: #1a1b1f;
+  border-radius: 10px;
+  margin: 8px;
+  padding: 12px;
+  border-top: 1px solid #2A2B30;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 16px;
+  position: relative;
+}
+
+.mem-sidebar-user::before{
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #2A2B30;
+}
+
+.mem-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background-color: #E8FF47;
+  color: #0A0A0A;
+}
+
+.mem-user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.mem-user-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #E8E9ED;
+}
+
+.mem-user-role {
+  font-size: 10px;
+  color: #6B6D78;
+  font-weight: 300;
+}
+
+.mem-user-menu {
+  background: none;
+  border: none;
+  color: #6B6D78;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+}
+
+/* ════════════════════════════════
+   MAIN
+════════════════════════════════ */
+.mem-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.mem-topbar {
+  height: 56px; 
+  background-color: #111214;
+  border-bottom: 1px solid #2A2B30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.mem-page-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 3px;
+  color: #E8FF47;
+  margin: 0;
+}
+
+.mem-new-btn {
+  background-color: #E8FF47;
+  color: #0A0A0A;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.mem-new-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.mem-content {
+  flex: 1;
+  padding: 24px 28px;
+  overflow-y: auto;
+}
+
+/* ════════════════════════════════
+   LAYOUT
+════════════════════════════════ */
+.mem-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+.mem-col-left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mem-col-right {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ════════════════════════════════
+   PLANES GRID
+════════════════════════════════ */
+.mem-planes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.mem-plan-card {
+  background-color: #111214;
+  border: 1px solid #2A2B30;
+  border-radius: 10px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.mem-plan-card:hover {
+  transform: translateY(-3px);
+}
+
+.mem-plan--mensual:hover    { border-color: #E8FF47; box-shadow: 0 0 20px rgba(232,255,71,0.15); }
+.mem-plan--trimestral:hover { border-color: #47C5FF; box-shadow: 0 0 20px rgba(71,197,255,0.15); }
+.mem-plan--semestral:hover  { border-color: #FFAA47; box-shadow: 0 0 20px rgba(255,170,71,0.15); }
+.mem-plan--anual:hover      { border-color: #3DFFA0; box-shadow: 0 0 20px rgba(61,255,160,0.15); }
+
+.mem-plan-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.mem-plan-nombre {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.mem-plan-precio {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.mem-plan-period {
+  font-size: 14px;
+  color: #6B6D78;
+  font-family: var(--font-body);
+  font-weight: 300;
+}
+
+.mem-plan-meta {
+  font-size: 12px;
+  color: #6B6D78;
+  font-weight: 300;
+  margin: 8px 0 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.mem-plan-actions {
+  display: flex;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ════════════════════════════════
+   BOTONES
+════════════════════════════════ */
+.mem-btn {
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.mem-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.mem-btn--asignar {
+  background-color: rgba(232, 255, 71, 0.12);
+  color: #E8FF47;
+  border: 1px solid rgba(232, 255, 71, 0.3);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 16px;
+}
+
+.mem-btn--icon {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  padding: 0;
+  background-color: rgba(255, 170, 71, 0.12);
+  border: 1px solid rgba(255, 170, 71, 0.25);
+}
+
+.mem-btn--renovar {
+  background-color: rgba(232, 255, 71, 0.12);
+  color: #E8FF47;
+  border: 1px solid rgba(232, 255, 71, 0.3);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 16px;
+}
+
+.mem-btn--guardar {
+  background-color: #E8FF47;
+  color: #0A0A0A;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 14px;
+  flex: 1;
+}
+
+.mem-btn--cancelar {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid #2A2B30;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 14px;
+  flex: 1;
+}
+
+/* ════════════════════════════════
+   CARD BASE
+════════════════════════════════ */
+.mem-card {
+  background-color: #18191D;
+  border: 1px solid #2A2B30;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.mem-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.mem-card-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+  margin: 0;
+}
+
+.mem-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  border-radius: 20px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.mem-badge--orange {
+  background-color: rgba(255, 170, 71, 0.12);
+  color: #FFAA47;
+  border: 1px solid rgba(255, 170, 71, 0.3);
+}
+
+/* ════════════════════════════════
+   TABLA
+════════════════════════════════ */
+.mem-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mem-table thead th {
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #6B6D78;
+  font-weight: 600;
+  padding: 10px 12px;
+  border-bottom: 1px solid #2A2B30;
+}
+
+.mem-table thead tr {
+  background-color: #1c1c1f;
+}
+
+.mem-table-row {
+  border-bottom: 1px solid #2A2B30;
+  transition: background-color 0.15s;
+}
+
+.mem-table-row:last-child { border-bottom: none; }
+
+.mem-table-row:hover {
+  background-color: rgba(232, 255, 71, 0.03);
+}
+
+.mem-table tbody td {
+  padding: 14px 12px;
+  font-size: 13px;
+  font-weight: 300;
+  color: #E8E9ED;
+}
+
+.mem-cliente-nombre {
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.mem-mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.mem-dias-alerta {
+  color: #FF4747;
+  font-weight: 600;
+}
+
+.mem-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.mem-tag--mensual {
+  background-color: rgba(61, 255, 160, 0.12);
+  color: #3DFFA0;
+}
+
+.mem-tag--trimestral {
+  background-color: rgba(71, 197, 255, 0.12);
+  color: #47C5FF;
+}
+
+.mem-tag--semestral {
+  background-color: rgba(255, 170, 71, 0.12);
+  color: #FFAA47;
+}
+
+/* ════════════════════════════════
+   FORMULARIO
+════════════════════════════════ */
+.mem-form-card {
+  position: sticky;
+  top: 80px;
+}
+
+.mem-form-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 3px;
+  color: #ffffff;
+  margin: 0 0 4px;
+}
+
+.mem-form-sub {
+  font-size: 12px;
+  font-weight: 300;
+  color: #6B6D78;
+  margin: 0 0 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #2A2B30;
+}
+
+.mem-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mem-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mem-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #6B6D78;
+  font-weight: 600;
+}
+
+.mem-input {
+  background-color: #111214;
+  border: 1px solid #2A2B30;
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 300;
+  color: #6B6D78;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: var(--font-body);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mem-input:focus {
+  border-color: #E8FF47;
+}
+
+.mem-input::placeholder {
+  color: #6B6D78;
+}
+
+.mem-select {
+  cursor: pointer;
+  appearance: none;
+  color: #fff;
+}
+
+.mem-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.mem-form-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}

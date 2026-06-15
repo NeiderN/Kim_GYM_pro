@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Inicio.css";
 
 /* ── Datos de ejemplo ── */
@@ -35,11 +36,11 @@ const ACTIVITY = [
 
 const NAV_ITEMS = [
   { section: "PRINCIPAL", items: [
-    { icon: "◎", label: "Inicio",    active: true  },
-    { icon: "👥", label: "Clientes",    active: false },
-    { icon: "🟨", label: "Membresías",  active: false },
-    { icon: "💳", label: "Pagos",       active: false },
-    { icon: "✅", label: "Asistencia",  active: false },
+    { icon: "◎", label: "Inicio"},
+    { icon: "👥", label: "Clientes"},
+    { icon: "🟨", label: "Membresías"},
+    { icon: "💳", label: "Pagos"},
+    { icon: "✅", label: "Asistencia"},
   ]},
   { section: "ADMINISTRACIÓN", items: [
     { icon: "👤", label: "Usuarios",     active: false },
@@ -86,6 +87,7 @@ function DonutChart() {
 /* ── Componente principal ── */
 export default function Inicio() {
   const [activeNav, setActiveNav] = useState("Inicio");
+  const navigate = useNavigate();
   const [hoveredBar, setHoveredBar] = useState(null);
   const maxBar = Math.max(...BAR_DATA.map((d) => d.value));
 
@@ -99,22 +101,31 @@ export default function Inicio() {
           <span className="dash-brand-sub">PRO SYSTEM</span>
         </div>
 
-        <nav className="dash-nav">
+       <nav className="dash-nav">
           {NAV_ITEMS.map((group) => (
             <div key={group.section} className="dash-nav-group">
-              <span className="dash-nav-section">{group.section}</span>
-              {group.items.map((item) => (
+            <span className="dash-nav-section">{group.section}</span>
+            {group.items.map((item) => (
                 <button
-                  key={item.label}
-                  className={`dash-nav-item ${activeNav === item.label ? "active" : ""}`}
-                  onClick={() => setActiveNav(item.label)}
+                key={item.label}
+                className={`dash-nav-item ${activeNav === item.label ? "active" : ""}`}
+                onClick={() => {
+                    setActiveNav(item.label);
+                    if (item.label === "Inicio")        navigate("/inicio");
+                    if (item.label === "Clientes")      navigate("/clientes");
+                    if (item.label === "Membresías")    navigate("/membresias");
+                    if (item.label === "Pagos")         navigate("/pagos");
+                    if (item.label === "Asistencia")    navigate("/asistencia");
+                    if (item.label === "Reportes")      navigate("/reportes");
+                    if (item.label === "Configuración") navigate("/configuracion");
+                }}
                 >
-                  <span className="dash-nav-icon">{item.icon}</span>
-                  {item.label}
+                <span className="dash-nav-icon">{item.icon}</span>
+                {item.label}
                 </button>
-              ))}
+            ))}
             </div>
-          ))}
+        ))}
         </nav>
 
         <div className="dash-sidebar-user">
