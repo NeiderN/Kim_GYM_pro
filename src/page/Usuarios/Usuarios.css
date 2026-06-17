@@ -1,0 +1,593 @@
+/* ─────────────────────────────────────────
+   Usuarios.css — Pantalla de Gestión de Equipo
+   GymControl Pro System
+   ───────────────────────────────────────── */
+
+/* ── Layout raíz ── */
+.usr-root {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #0A0A0A;
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+/* ════════════════════════════════
+   SIDEBAR (Consistente con Clientes y Configuración)
+   ════════════════════════════════ */
+.usr-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background-color: #111214;
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.usr-sidebar-brand {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.usr-brand-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 4px;
+}
+
+.usr-brand-highlight {
+  color: var(--color-accent);
+}
+
+.usr-nav {
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.usr-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.usr-nav-section {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--color-muted);
+  padding: 0 12px 6px;
+  font-weight: 600;
+}
+
+.usr-nav-item {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 10px 12px;
+  color: var(--color-text2);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.usr-nav-item:hover {
+  background-color: rgba(232, 255, 71, 0.05);
+  color: var(--color-text);
+}
+
+.usr-nav-item.active {
+  background-color: var(--color-accent);
+  color: #0A0A0A;
+  font-weight: 600;
+}
+
+.usr-nav-icon {
+  font-size: 16px;
+}
+
+/* ── SECCIÓN ADMIN DEL SIDEBAR REPARADA (PREFIJO USR) ── */
+.usr-sidebar-user {
+  background-color: #1a1b1f;
+  border-radius: 10px;
+  margin: auto 8px 12px 8px; /* margin-top: auto empuja el componente abajo */
+  padding: 12px;
+  border-top: 1px solid #2A2B30;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.usr-avatar-footer {
+  width: 34px;
+  height: 34px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background-color: #E8FF47;
+  color: #0A0A0A;
+}
+
+.usr-user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.usr-user-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #E8E9ED;
+  line-height: 1.4;
+}
+
+.usr-user-role {
+  font-size: 10px;
+  color: #6B6D78;
+  font-weight: 300;
+}
+
+.usr-user-menu {
+  background: none;
+  border: none;
+  color: #6B6D78;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+}
+
+.usr-sidebar-user::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+/* ════════════════════════════════
+   MAIN CONTENT & TOPBAR
+   ════════════════════════════════ */
+.usr-main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.usr-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 30px;
+  border-bottom: 1px solid var(--color-border);
+  background-color: #0A0A0A;
+  gap: 20px;
+}
+
+.usr-page-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: 1px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.usr-page-title span {
+  color: var(--color-accent);
+}
+
+.usr-page-subtitle {
+  font-size: 12px;
+  color: var(--color-muted);
+  margin-top: 2px;
+}
+
+.usr-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Buscador del Topbar */
+.usr-search-wrapper {
+  position: relative;
+}
+
+.usr-search-input {
+  background-color: #111214;
+  border: 1px solid var(--color-border);
+  padding: 8px 16px;
+  border-radius: 20px;
+  color: var(--color-text);
+  font-size: 13px;
+  width: 260px;
+  transition: all 0.2s;
+}
+
+.usr-search-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  width: 300px;
+}
+
+/* ════════════════════════════════
+   CONTENEDOR DE TRABAJO (2 Columnas Asimétricas)
+   ════════════════════════════════ */
+.usr-container {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  padding: 30px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .usr-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tarjeta del Listado (Izquierda) */
+.usr-content-card {
+  background-color: #18191d;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.usr-card-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.usr-card-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.usr-card-counter {
+  font-size: 12px;
+  color: var(--color-muted);
+  display: block;
+  margin-top: 2px;
+}
+
+/* Filtros rápidos (Chips) */
+.usr-filter-group {
+  display: flex;
+  gap: 6px;
+}
+
+.usr-filter-chip {
+  background-color: #111214;
+  border: 1px solid var(--color-border);
+  color: var(--color-text2);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.usr-filter-chip:hover {
+  border-color: rgba(232, 255, 71, 0.3);
+  color: var(--color-text);
+}
+
+.usr-filter-chip.active {
+  background-color: rgba(232, 255, 71, 0.1);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* ════════════════════════════════
+   TABLA DE USUARIOS
+   ════════════════════════════════ */
+.usr-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.usr-table th {
+  background-color: rgba(17, 18, 20, 0.4);
+  padding: 14px 20px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text2);
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
+}
+
+.usr-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.usr-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Celda Principal de Información de Usuario */
+.usr-info-cell {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.usr-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.usr-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.usr-subtext {
+  font-size: 12px;
+  color: var(--color-muted);
+  margin-top: 2px;
+}
+
+/* Insignias de Roles Jerárquicos */
+.usr-badge-rol {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.usr-badge-rol.admin { background-color: rgba(232, 255, 11, 0.12); color: #e8ff47; border: 1px solid rgba(232, 255, 11, 0.2); }
+.usr-badge-rol.recepcion { background-color: rgba(255, 170, 71, 0.12); color: #ffaa47; border: 1px solid rgba(255, 170, 71, 0.2); }
+.usr-badge-rol.financiero { background-color: rgba(71, 197, 255, 0.12); color: #47c5ff; border: 1px solid rgba(71, 197, 255, 0.2); }
+.usr-badge-rol.entrenador { background-color: rgba(61, 255, 160, 0.12); color: #3dffa0; border: 1px solid rgba(61, 255, 160, 0.2); }
+
+.usr-area-subtext {
+  font-size: 11px;
+  color: var(--color-muted);
+  margin-top: 4px;
+  padding-left: 2px;
+}
+
+/* Celda de Permisos en Bloques de Código */
+.usr-permisos-cell code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text2);
+  background-color: #111214;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(42, 43, 48, 0.6);
+}
+
+/* Estados (Activo / Inactivo) */
+.usr-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.usr-estado-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.usr-estado--activo { color: #3dffa0; }
+.usr-estado--activo .usr-estado-dot { background-color: #3dffa0; box-shadow: 0 0 6px #3dffa0; }
+
+.usr-estado--inactivo { color: var(--color-muted); }
+.usr-estado--inactivo .usr-estado-dot { background-color: var(--color-muted); }
+
+/* Acciones en Fila */
+.usr-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.usr-btn {
+  background: none;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--color-text);
+}
+
+.usr-btn--edit {
+  background-color: rgba(255, 170, 71, 0.1);
+  border: 1px solid rgba(255, 170, 71, 0.2);
+  color: #ffaa47;
+}
+
+.usr-btn--edit:hover {
+  background-color: rgba(255, 170, 71, 0.2);
+}
+
+.usr-btn--delete {
+  background-color: rgba(255, 71, 71, 0.1);
+  border: 1px solid rgba(255, 71, 71, 0.2);
+}
+
+.usr-btn--delete:hover {
+  background-color: rgba(255, 71, 71, 0.2);
+}
+
+/* ════════════════════════════════
+   PANEL LATERAL: FORMULARIO (Derecha)
+   ════════════════════════════════ */
+.usr-side-panel {
+  background-color: #18191d;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.usr-panel-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.usr-panel-subtitle {
+  font-size: 12px;
+  color: var(--color-muted);
+  margin-top: 4px;
+  line-height: 1.4;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 16px;
+}
+
+.usr-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.usr-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.usr-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text2);
+  font-weight: 500;
+}
+
+.usr-input, .usr-select {
+  background-color: #111214;
+  border: 1px solid var(--color-border);
+  padding: 10px 14px;
+  border-radius: 6px;
+  color: var(--color-text);
+  font-size: 13px;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.usr-input:focus, .usr-select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 4px rgba(232, 255, 71, 0.15);
+}
+
+.usr-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: rgba(17, 18, 20, 0.5);
+}
+
+/* Grupo de Radios para Estado */
+.usr-radio-group {
+  display: flex;
+  gap: 20px;
+  background-color: #111214;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+}
+
+.usr-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.usr-radio-label input[type="radio"] {
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+/* Botones de acción del Formulario */
+.usr-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.usr-btn-clear {
+  flex: 1;
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text2);
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.usr-btn-clear:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--color-text);
+}
+
+.usr-btn-submit {
+  flex: 1;
+  background-color: var(--color-accent);
+  border: none;
+  color: #0A0A0A;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.usr-btn-submit:hover {
+  opacity: 0.9;
+}

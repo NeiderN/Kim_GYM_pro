@@ -27,8 +27,10 @@ const NAV_ITEMS = [
     { icon: "✅", label: "Asistencia",  active: false },
   ]},
   { section: "ADMINISTRACIÓN", items: [
+    { icon: "👥", label: "Usuarios", active: false },
     { icon: "📊", label: "Reportes",     active: false },
     { icon: "⚙️", label: "Configuración", active: false },
+
   ]},
 ];
 
@@ -64,6 +66,7 @@ export default function Clientes() {
                   if (item.label === "Asistencia")    navigate("/asistencia");
                   if (item.label === "Reportes")      navigate("/reportes");
                   if (item.label === "Configuración") navigate("/configuracion");
+                  if (item.label === "Usuarios") navigate("/usuarios");
                 }}
               >
                 <span className="cli-nav-icon">{item.icon}</span>

@@ -7,6 +7,8 @@ import Membresias from "./page/Membresias/Membresias";
 import Pagos from "./page/Pagos/Pagos";
 import Asistencia from "./page/Asistencia/Asistencia"; 
 import Reportes from "./page/Reportes/Reportes"; 
+import Usuarios from "./page/Usuarios/Usuarios"
+import Configuracion from "./page/Configuracion/Configuracion"
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         <Route path="/pagos" element={<Pagos />} />
         <Route path="/asistencia" element={<Asistencia />} />
         <Route path="/reportes" element={<Reportes />} />
+        <Route path="/Usuarios" element={<Usuarios />} />
+        <Route path="/Configuracion" element={<Configuracion />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

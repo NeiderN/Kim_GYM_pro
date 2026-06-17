@@ -19,6 +19,7 @@ const NAV_ITEMS = [
     { icon: "✅", label: "Asistencia"  },
   ]},
   { section: "ADMINISTRACIÓN", items: [
+    { icon: "👥", label: "Usuarios" },
     { icon: "📊", label: "Reportes"      },
     { icon: "⚙️", label: "Configuración" },
   ]},
@@ -77,6 +78,7 @@ export default function Asistencia() {
                     if (item.label === "Asistencia")    navigate("/asistencia");
                     if (item.label === "Reportes")      navigate("/reportes");
                     if (item.label === "Configuración") navigate("/configuracion");
+                    if (item.label === "Usuarios") navigate("/usuarios");
                   }}
                 >
                   <span className="asis-nav-icon">{item.icon}</span>
