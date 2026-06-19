@@ -4,24 +4,18 @@ import "./Usuarios.css";
 
 /* ── 1. DEFINICIÓN DE ÍTEMS DE NAVEGACIÓN ── */
 const NAV_ITEMS = [
-  {
-    section: "Principal",
-    items: [
-      { label: "Inicio", icon: "⬡" },
-      { label: "Clientes", icon: "👥" },
-      { label: "Membresías", icon: "🎫" },
-      { label: "Pagos", icon: "💳" },
-      { label: "Asistencia", icon: "🕒" }
-    ]
-  },
-  {
-    section: "Administración",
-    items: [
-      { label: "Usuarios", icon: "👤" },
-      { label: "Reportes", icon: "📊" },
-      { label: "Configuración", icon: "⚙️" }
-    ]
-  }
+  { section: "PRINCIPAL", items: [
+    { icon: "◎",  label: "Inicio"      },
+    { icon: "👥", label: "Clientes"    },
+    { icon: "🟨", label: "Membresías"  },
+    { icon: "💳", label: "Pagos"       },
+    { icon: "✅", label: "Asistencia"  },
+  ]},
+  { section: "ADMINISTRACIÓN", items: [
+    { icon: "👤", label: "Usuarios"      },
+    { icon: "📊", label: "Reportes"      },
+    { icon: "⚙️", label: "Configuración" },
+  ]},
 ];
 
 /* ── Datos de ejemplo basados en la Matriz de Accesos ── */
@@ -144,8 +138,9 @@ export default function Usuarios() {
     <div className="usr-root">
       {/* SIDEBAR COMPARTIDO */}
       <aside className="usr-sidebar">
-        <div className="usr-sidebar-brand">
-          <span className="usr-brand-name">GymControl<span className="usr-brand-highlight">PRO</span></span>
+        <div className="cli-sidebar-brand">
+          <span className="cli-brand-name">GYMCONTROL</span>
+          <span className="cli-brand-sub">PRO SYSTEM</span>
         </div>
         <nav className="usr-nav">
           {NAV_ITEMS.map((group) => (
