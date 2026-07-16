@@ -116,6 +116,7 @@ export default function Inicio() {
                     if (item.label === "Membresías")    navigate("/membresias");
                     if (item.label === "Pagos")         navigate("/pagos");
                     if (item.label === "Asistencia")    navigate("/asistencia");
+                    if (item.label === "Usuarios")      navigate("/usuarios");
                     if (item.label === "Reportes")      navigate("/reportes");
                     if (item.label === "Configuración") navigate("/configuracion");
                 }}

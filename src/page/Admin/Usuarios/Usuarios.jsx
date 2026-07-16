@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Usuarios.css";
 
@@ -18,19 +18,19 @@ const NAV_ITEMS = [
   ]},
 ];
 
-/* ── Datos de ejemplo basados en la Matriz de Accesos ── */
-const INITIAL_USUARIOS = [
-  { iniciales: "CM", nombre: "Carlos Mendez", email: "carlos.m@gymcontrol.pro", doc: "10203040", area: "Administrativa", rol: "Administrador General", rolKey: "admin", estado: "Activo", estadoType: "activo", permisos: "Acceso Total", bg: "#e8ff47" },
-  { iniciales: "LV", nombre: "Laura Victoria", email: "laura.v@gymcontrol.pro", doc: "10506070", area: "Recepción", rol: "Recepcionista", rolKey: "recepcion", estado: "Activo", estadoType: "activo", permisos: "Clientes, Pagos, Asistencia (Parcial)", bg: "#ffaa47" },
-  { iniciales: "ST", nombre: "Sergio Torres", email: "sergio.t@gymcontrol.pro", doc: "10809010", area: "Financiera", rol: "Auxiliar Financiero", rolKey: "financiero", estado: "Activo", estadoType: "activo", permisos: "Pagos y Reportes Financieros", bg: "#47c5ff" },
-  { iniciales: "BD", nombre: "Prof. Bruno Díaz", email: "bruno.d@gymcontrol.pro", doc: "10998877", area: "Entrenamiento", rol: "Entrenador", rolKey: "entrenador", estado: "Inactivo", estadoType: "inactivo", permisos: "Consulta de Clientes/Asistencias", bg: "#3dffa0" }
-];
+// Mapeo estético para traducir los IDs de la base de datos a tus estilos visuales
+const ROLES_MAP = {
+  1: { key: "admin", rol: "Administrador General", area: "Administrativa", permisos: "Acceso Total", bg: "#e8ff47" },
+  2: { key: "recepcion", rol: "Recepcionista", area: "Recepción", permisos: "Clientes, Pagos, Asistencia (Parcial)", bg: "#ffaa47" },
+  3: { key: "entrenador", rol: "Entrenador", area: "Entrenamiento", permisos: "Consulta de Clientes/Asistencias", bg: "#3dffa0" },
+  4: { key: "cliente", rol: "Cliente", area: "Clientes", permisos: "Consulta de perfil/Rutinas", bg: "#47c5ff" }
+};
 
 export default function Usuarios() {
   const navigate = useNavigate();
   
-  // Estados para la gestión de datos
-  const [usuarios, setUsuarios] = useState(INITIAL_USUARIOS);
+  // Estados para la gestión de datos reales de la API
+  const [usuarios, setUsuarios] = useState([]);
   const [search, setSearch] = useState("");
   const [filterRol, setFilterRol] = useState("Todos");
   
@@ -40,12 +40,46 @@ export default function Usuarios() {
   // Estados del Formulario (Crear / Editar)
   const [formData, setFormData] = useState({
     nombre: "",
+    apellido: "", // Añadido para coincidir con la DB
     email: "",
-    doc: "",
+    doc: "",      // Mapeado a la contraseña o usado como identificador
     rolKey: "",
     estado: "Activo"
   });
   const [isEditing, setIsEditing] = useState(false);
+
+  // Cargar usuarios desde la base de datos al montar el componente
+  const cargarUsuarios = () => {
+  // Ahora consumimos la ruta real de usuarios que creamos en el backend
+  fetch("http://localhost:5000/api/usuarios") 
+    .then((res) => res.json())
+    .then((data) => {
+        // Mapeamos los usuarios que vengan de la DB a la estructura visual que ya tienes armada
+        const usuariosFormateados = data.map((u) => {
+          const roleConfig = ROLES_MAP[u.id_rol] || { key: "general", rol: "Usuario", area: "General", permisos: "Lectura", bg: "#6b6d78" };
+          const inicials = u.nombre ? u.nombre.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2) : "NN";
+          return {
+            iniciales: inicials,
+            nombre: `${u.nombre || "Usuario"} ${u.apellido || ""}`,
+            email: u.correo || "sin@correo.com",
+            doc: u.id_usuario?.toString() || "0",
+            area: roleConfig.area,
+            rol: roleConfig.rol,
+            rolKey: roleConfig.key,
+            estado: "Activo",
+            estadoType: "activo",
+            permisos: roleConfig.permisos,
+            bg: roleConfig.bg
+          };
+        });
+        setUsuarios(usuariosFormateados);
+      })
+      .catch((err) => console.error("Error cargando usuarios:", err));
+  };
+
+  useEffect(() => {
+    cargarUsuarios();
+  }, []);
 
   // Manejar cambios en los inputs del formulario
   const handleInputChange = (e) => {
@@ -56,18 +90,34 @@ export default function Usuarios() {
   // Enviar Formulario (Guardar / Actualizar)
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    const rolesMap = {
-      admin: { rol: "Administrador General", area: "Administrativa", permisos: "Acceso Total", bg: "#e8ff47" },
-      recepcion: { rol: "Recepcionista", area: "Recepción", permisos: "Clientes, Pagos, Asistencia (Parcial)", bg: "#ffaa47" },
-      financiero: { rol: "Auxiliar Financiero", area: "Financiera", permisos: "Pagos y Reportes Financieros", bg: "#47c5ff" },
-      entrenador: { rol: "Entrenador", area: "Entrenamiento", permisos: "Consulta de Clientes/Asistencias", bg: "#3dffa0" }
+
+    // Mapear la clave del rol al ID numérico que espera la Base de Datos
+    const rolKeyToId = {
+      admin: 1,
+      recepcion: 2,
+      entrenador: 3,
+      financiero: 2 // O el que prefieras asignar
     };
 
-    const roleConfig = rolesMap[formData.rolKey] || { rol: "Usuario", area: "General", permisos: "Lectura", bg: "#6b6d78" };
-    const initials = formData.nombre.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
+    // Separamos el nombre ingresado para guardar nombre y apellido por separado en la DB
+    const nombrePartes = formData.nombre.trim().split(" ");
+    const nombre = nombrePartes[0];
+    const apellido = nombrePartes.slice(1).join(" ") || " ";
+
+    const datosUsuarioDB = {
+      nombre: nombre,
+      apellido: apellido,
+      correo: formData.email,
+      contrasena: formData.doc, // Usamos temporalmente el doc como contraseña por defecto
+      telefono: "00000000",      // Teléfono por defecto
+      id_rol: rolKeyToId[formData.rolKey] || 4
+    };
 
     if (isEditing) {
+      // Lógica de edición simulada en el estado local (puedes expandir con PUT a la API después)
+      const roleConfig = Object.values(ROLES_MAP).find(r => r.key === formData.rolKey) || { rol: "Usuario", area: "General", permisos: "Lectura", bg: "#6b6d78" };
+      const initials = formData.nombre.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
+
       setUsuarios(usuarios.map(u => u.doc === formData.doc ? {
         ...u,
         nombre: formData.nombre,
@@ -82,24 +132,30 @@ export default function Usuarios() {
         bg: roleConfig.bg
       } : u));
       setIsEditing(false);
+      handleClearForm();
     } else {
-      const nuevoUsuario = {
-        iniciales: initials,
-        nombre: formData.nombre,
-        email: formData.email,
-        doc: formData.doc,
-        area: roleConfig.area,
-        rol: roleConfig.rol,
-        rolKey: formData.rolKey,
-        estado: formData.estado,
-        estadoType: formData.estado.toLowerCase(),
-        permisos: roleConfig.permisos,
-        bg: roleConfig.bg
-      };
-      setUsuarios([...usuarios, nuevoUsuario]);
+      // REGISTRO REAL EN TU BASE DE DATOS
+      fetch("http://localhost:5000/api/usuarios", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(datosUsuarioDB),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Error registrando usuario en DB");
+          return res.json();
+        })
+        .then(() => {
+          alert("¡Usuario registrado exitosamente en la base de datos de Laragon!");
+          cargarUsuarios(); // Recargamos la lista actualizada desde la DB
+          handleClearForm();
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("Ocurrió un error al intentar guardar en la base de datos.");
+        });
     }
-
-    handleClearForm();
   };
 
   // Cargar usuario para edición
@@ -117,6 +173,7 @@ export default function Usuarios() {
   // Eliminar Usuario
   const handleDeleteClick = (doc) => {
     if (window.confirm("¿Está seguro de que desea eliminar este usuario del sistema?")) {
+      // De momento removemos localmente (puedes implementar un DELETE en tu API más adelante)
       setUsuarios(usuarios.filter(u => u.doc !== doc));
     }
   };
@@ -139,7 +196,7 @@ export default function Usuarios() {
       {/* SIDEBAR COMPARTIDO */}
       <aside className="usr-sidebar">
         <div className="cli-sidebar-brand">
-          <span className="cli-brand-name">KIN GYM</span>
+          <span className="cli-brand-name">GYMCONTROL</span>
           <span className="cli-brand-sub">PRO SYSTEM</span>
         </div>
         <nav className="usr-nav">
@@ -247,7 +304,7 @@ export default function Usuarios() {
                         </div>
                         <div>
                           <div className="usr-name">{u.nombre}</div>
-                          <div className="usr-subtext">{u.email} • Doc: {u.doc}</div>
+                          <div className="usr-subtext">{u.email} • ID: {u.doc}</div>
                         </div>
                       </div>
                     </td>
@@ -298,7 +355,7 @@ export default function Usuarios() {
               <div className="usr-form-group">
                 <label className="usr-label">Nombre Completo</label>
                 <input 
-                  type="text"
+                  type="text" 
                   name="nombre" 
                   className="usr-input" 
                   placeholder="Ej. Andrea Gómez" 
@@ -309,7 +366,7 @@ export default function Usuarios() {
               </div>
 
               <div className="usr-form-group">
-                <label className="usr-label">Documento de Identidad</label>
+                <label className="usr-label">Documento de Identidad (Servirá como Contraseña)</label>
                 <input 
                   type="text" 
                   name="doc" 
