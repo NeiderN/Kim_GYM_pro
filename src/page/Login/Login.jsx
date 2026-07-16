@@ -2,13 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
-
-
 const ROLES = [
-  { label: "Admin",      icon: "👤", value: "admin",      email: "admin@gymcontrol.co"      },
-  { label: "Recepción",  icon: "🏢", value: "recepcion",  email: "recepcion@gymcontrol.co"  },
-  { label: "Financiero", icon: "🔥", value: "financiero", email: "financiero@gymcontrol.co" },
-  { label: "Entrenador", icon: "💪", value: "entrenador", email: "entrenador@gymcontrol.co" },
+  { label: "Admin",      icon: "👤", value: "admin",      email: "admin@gymcontrol.co", path: "/inicio"      },
+  { label: "Recepción",  icon: "🏢", value: "recepcion",  email: "recepcion@gymcontrol.co", path:"/recepcion/inicio"  },
+  { label: "Cliente", icon: "🔥", value: "cliente", email: "cliente@gymcontrol.co", path: "/cliente" },
+  { label: "Entrenador", icon: "💪", value: "entrenador", email: "entrenador@gymcontrol.co", path: "/entrenador" },
 ];
 
 export default function Login() {
@@ -28,7 +26,13 @@ export default function Login() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      navigate("/Inicio");
+      const currentRoleObj = ROLES.find(r => r.value === activeRole);
+
+      if (currentRoleObj && currentRoleObj.path) {
+        navigate(currentRoleObj.path);
+      } else {
+        navigate("/inicio");
+      }
     }, 1000);
   }
 
@@ -42,7 +46,7 @@ export default function Login() {
 
           <div className="login-left-content">
             <div>
-              <h1 className="login-brand-name">GYMCONTROL</h1>
+              <h1 className="login-brand-name">KIN GYM</h1>
               <p className="login-brand-sub">PRO&nbsp;&nbsp;SYSTEM&nbsp;&nbsp;v2.0</p>
             </div>
 
@@ -66,7 +70,7 @@ export default function Login() {
             </ul>
           </div>
 
-          <div className="login-watermark">GC</div>
+          <div className="login-watermark">KG</div>
         </div>
 
         {/* ── Panel derecho ── */}

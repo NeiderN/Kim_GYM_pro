@@ -1,0 +1,506 @@
+/* ─────────────────────────────────────────
+   Configuracion.css — Pantalla de Parámetros
+   GymControl Pro System
+   ───────────────────────────────────────── */
+
+.cfg-root {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #0A0A0A;
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+/* ════════════════════════════════
+   SIDEBAR (Consistente con Clientes.css)
+   ════════════════════════════════ */
+.cfg-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background-color: #111214;
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.cfg-sidebar-brand {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cfg-brand-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: #E8FF47;
+  line-height: 1;
+}
+
+.cfg-brand-sub {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: #6B6D78;
+  margin-top: 4px;
+}
+
+.cfg-brand-highlight {
+  color: var(--color-accent);
+}
+
+.cfg-sidebar-menu {
+  flex: 1;
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.cfg-menu-section {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #6B6D78;
+  padding: 0 20px 6px;
+  font-weight: 500;
+}
+
+.cfg-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #6B6D78;
+  background: transparent;
+  border: none;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  font-family: var(--font-body);
+  width: 100%;
+  text-align: left;
+  transition: all 0.15s;
+}
+
+.cfg-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cfg-nav-icon {
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+}
+
+.cfg-nav-btn:hover {
+  color: #E8E9ED;
+  background-color: rgba(255,255,255,0.04);
+}
+
+.cfg-nav-btn.active {
+  color: #E8FF47;
+  border-left: 2px solid #E8FF47;
+  background-color: rgba(232, 255, 71, 0.06);
+  font-weight: 500;
+}
+
+/* Usuario en sidebar */
+.cfg-sidebar-user {
+  background-color: #1a1b1f;
+  border-radius: 10px;
+  margin: 8px;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  margin-top: 12px;
+  padding-top: 18px;
+}
+
+.cfg-sidebar-user::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #2A2B30;
+}
+
+.cfg-avatar-sidebar {
+  width: 34px;
+  height: 34px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  background-color: #E8FF47;
+  color: #0A0A0A;
+  flex-shrink: 0;
+}
+
+.cfg-sidebar-user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cfg-sidebar-user-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #E8E9ED;
+}
+
+.cfg-sidebar-user-role {
+  font-size: 10px;
+  color: #6B6D78;
+  font-weight: 300;
+}
+
+.cfg-sidebar-user-menu {
+  background: none;
+  border: none;
+  color: #6B6D78;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* ════════════════════════════════
+   MAIN CONTENT & TOPBAR
+   ════════════════════════════════ */
+.cfg-main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cfg-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 28px;
+  height: 56px;
+  border-bottom: 1px solid #2A2B30;
+  background-color: #111214;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.cfg-page-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  letter-spacing: 3px;
+  font-weight: 400;
+  color: #E8E9ED;
+  margin: 0;
+}
+
+.cfg-page-title span {
+  color: #E8FF47;
+}
+
+.cfg-page-subtitle {
+  font-size: 11px;
+  color: #6B6D78;
+  margin-top: 2px;
+  font-weight: 300;
+}
+
+.cfg-topbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.cfg-user-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #18191D;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid #2A2B30;
+}
+
+.cfg-avatar-mini {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #E8FF47;
+  color: #0A0A0A;
+}
+
+.cfg-user-role {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ════════════════════════════════
+   DISEÑO GRÁFICO DEL FORMULARIO MASTER
+   ════════════════════════════════ */
+.cfg-container {
+  padding: 30px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.cfg-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .cfg-grid-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tarjetas Modulares de Configuración */
+.cfg-card {
+  background-color: #18191D;
+  border: 1px solid #2A2B30;
+  border-radius: 10px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cfg-card-header {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border-bottom: 1px solid #2A2B30;
+  padding-bottom: 14px;
+}
+
+.cfg-card-icon {
+  font-size: 20px;
+  background-color: #111214;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  line-height: 1;
+}
+
+.cfg-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.cfg-card-desc {
+  font-size: 12px;
+  color: var(--color-muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* Inputs y Estructura de Formularios */
+.cfg-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cfg-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cfg-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #6B6D78;
+  font-weight: 600;
+}
+
+.cfg-input, .cfg-select {
+  background-color: #111214;
+  border: 1px solid #2A2B30;
+  padding: 11px 14px;
+  border-radius: 6px;
+  color: #E8E9ED;
+  font-size: 13px;
+  font-weight: 300;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  font-family: var(--font-body);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.cfg-input::placeholder { color: #6B6D78; }
+
+.cfg-input:focus, .cfg-select:focus {
+  border-color: #E8FF47;
+  box-shadow: 0 0 4px rgba(232, 255, 71, 0.15);
+}
+
+.cfg-input-help {
+  font-size: 11px;
+  color: #6B6D78;
+  margin-top: 2px;
+  font-weight: 300;
+}
+
+/* Wrapper para Campos de Moneda/Prefix */
+.cfg-input-currency-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cfg-currency-prefix {
+  position: absolute;
+  left: 14px;
+  font-size: 13px;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.cfg-input.style-prefix {
+  padding-left: 30px;
+}
+
+/* Estructura para Checkboxes */
+.cfg-flex-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cfg-checkbox-label {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  cursor: pointer;
+  background-color: #111214;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #2A2B30;
+  transition: border-color 0.2s;
+}
+
+.cfg-checkbox-label:hover {
+  border-color: rgba(232, 255, 71, 0.3);
+}
+
+.cfg-checkbox-label input[type="checkbox"] {
+  accent-color: #E8FF47;
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cfg-checkbox-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #E8E9ED;
+}
+
+.cfg-checkbox-desc {
+  font-size: 11px;
+  color: #6B6D78;
+  margin-top: 3px;
+  line-height: 1.4;
+  font-weight: 300;
+}
+
+/* Alertas de Éxito Reactivas */
+.cfg-alert-success {
+  background-color: rgba(61, 255, 160, 0.1);
+  border: 1px solid #3dffa0;
+  color: #3dffa0;
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 24px;
+  font-weight: 500;
+  box-shadow: 0 0 10px rgba(61, 255, 160, 0.05);
+}
+
+/* ════════════════════════════════
+   PIE DE PÁGINA FIX / BOTÓN ACCIÓN
+   ════════════════════════════════ */
+.cfg-footer-actions {
+  margin-top: 20px;
+  background-color: #111214;
+  border: 1px solid #2A2B30;
+  padding: 20px 24px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .cfg-footer-actions {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.cfg-footer-info-text {
+  font-size: 12px;
+  color: #6B6D78;
+  line-height: 1.4;
+  max-width: 600px;
+  font-weight: 300
+}
+
+.cfg-btn-submit {
+  background-color: #E8FF47;
+  border: none;
+  color: #0A0A0A;
+  padding: 13px 24px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  letter-spacing: 0.5px;
+}
+
+.cfg-btn-submit:hover {
+  opacity: 0.9;
+}
+
+.cfg-btn-submit:active {
+  transform: scale(0.98);
+}
+
+.cfg-btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
