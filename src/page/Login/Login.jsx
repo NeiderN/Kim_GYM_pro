@@ -3,37 +3,69 @@ import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 const ROLES = [
-  { label: "Admin",      icon: "👤", value: "admin",      email: "admin@gymcontrol.co", path: "/inicio"      },
-  { label: "Recepción",  icon: "🏢", value: "recepcion",  email: "recepcion@gymcontrol.co", path:"/recepcion/inicio"  },
-  { label: "Cliente", icon: "🔥", value: "cliente", email: "cliente@gymcontrol.co", path: "/cliente" },
-  { label: "Entrenador", icon: "💪", value: "entrenador", email: "entrenador@gymcontrol.co", path: "/entrenador" },
+  { label: "Admin",      icon: "👤", value: "admin",      email: "admin@gymcontrol.co" },
+  { label: "Recepción",  icon: "🏢", value: "recepcion",  email: "recepcion@gymcontrol.co" },
+  { label: "Cliente",    icon: "🔥", value: "cliente",    email: "cliente@gymcontrol.co" },
+  { label: "Entrenador", icon: "💪", value: "entrenador", email: "entrenador@gymcontrol.co" },
 ];
 
 export default function Login() {
   const navigate = useNavigate();
-  const [email,      setEmail]      = useState("admin@gymcontrol.co");
-  const [password,   setPassword]   = useState("");
+  const [email, setEmail] = useState("admin@gymcontrol.co");
+  const [password, setPassword] = useState("");
   const [activeRole, setActiveRole] = useState("admin");
-  const [loading,    setLoading]    = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   function handleRoleClick(role) {
     setActiveRole(role.value);
     setEmail(role.email);
+    setErrorMsg("");
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setErrorMsg("");
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      const currentRoleObj = ROLES.find(r => r.value === activeRole);
 
-      if (currentRoleObj && currentRoleObj.path) {
-        navigate(currentRoleObj.path);
+    try {
+      // 1. Petición real al servidor backend
+      const response = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo: email, contrasena: password }),
+      });
+
+      const data = await response.json();
+
+      // 2. Validación de respuesta HTTP / Credenciales
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Credenciales inválidas.");
+      }
+
+      // 3. Guardar datos de sesión si la validación en BD fue exitosa
+      localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
+      // 4. Redirección por ID de rol retornado por la BD (Evita acceso no autorizado)
+      const rolId = data.usuario.id_rol;
+      if (rolId === 1) {
+        navigate("/inicio");
+      } else if (rolId === 2) {
+        navigate("/recepcion/inicio");
+      } else if (rolId === 3) {
+        navigate("/cliente");
+      } else if (rolId === 4) {
+        navigate("/entrenador");
       } else {
         navigate("/inicio");
       }
-    }, 1000);
+
+    } catch (err) {
+      // Muestra la alerta de error y bloquea la navegación
+      setErrorMsg(err.message || "No se pudo conectar con el servidor.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -79,6 +111,22 @@ export default function Login() {
             <h2 className="login-form-title">BIENVENIDO</h2>
             <p className="login-form-sub">Ingresa con tu cuenta para continuar</p>
 
+            {/* Mensaje de error si falla la validación en BD */}
+            {errorMsg && (
+              <div style={{
+                backgroundColor: "#e74c3c",
+                color: "#ffffff",
+                padding: "10px",
+                borderRadius: "6px",
+                marginBottom: "15px",
+                fontSize: "0.85rem",
+                textAlign: "center",
+                fontWeight: "bold"
+              }}>
+                {errorMsg}
+              </div>
+            )}
+
             <form className="login-form" onSubmit={handleSubmit}>
               <div className="login-field-group">
                 <label className="login-label">CORREO ELECTRÓNICO</label>
@@ -88,6 +136,7 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="usuario@gymcontrol.co"
+                  required
                 />
               </div>
 
@@ -99,6 +148,7 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
+                  required
                 />
               </div>
 
@@ -121,6 +171,7 @@ export default function Login() {
                 {ROLES.map((role) => (
                   <button
                     key={role.value}
+                    type="button"
                     className={`login-role-btn ${activeRole === role.value ? "active" : ""}`}
                     onClick={() => handleRoleClick(role)}
                   >

@@ -1,20 +1,25 @@
-import mysql from 'mysql2';
+import mysql from 'mysql2/promise';
 
-// Crear la conexión con los datos de Laragon
-const connection = mysql.createConnection({
-  host: 'localhost',      // El servidor local que corre en Laragon
-  user: 'root',           // Usuario por defecto de Laragon
-  password: '',           // Contraseña vacía por defecto
-  database: 'kingympro_db' // El nombre de la base de datos de tu proyecto
+// Crear un Pool de conexiones en lugar de una conexión única (Soporta promesas y reconexión)
+const db = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'kingympro_db',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-// Conectar y verificar si hay errores
-connection.connect((err) => {
-  if (err) {
-    console.error('❌ Error al conectar a la base de datos de Laragon:', err.stack);
-    return;
+// Prueba de verificación inicial
+(async () => {
+  try {
+    const connection = await db.getConnection();
+    console.log('✅ ¡Conexión exitosa a la base de datos de KinGymPro en Laragon!');
+    connection.release();
+  } catch (err) {
+    console.error('❌ Error al conectar a la base de datos de Laragon:', err.message);
   }
-  console.log('✅ ¡Conexión exitosa a la base de datos de KinGymPro en Laragon!');
-});
+})();
 
-export default connection;
+export default db;

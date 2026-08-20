@@ -1,142 +1,149 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Usuarios.css";
 
-/* ── 1. DEFINICIÓN DE ÍTEMS DE NAVEGACIÓN ── */
 const NAV_ITEMS = [
   { section: "PRINCIPAL", items: [
-    { icon: "◎",  label: "Inicio"      },
-    { icon: "👥", label: "Clientes"    },
-    { icon: "🟨", label: "Membresías"  },
-    { icon: "💳", label: "Pagos"       },
-    { icon: "✅", label: "Asistencia"  },
+    { icon: "◎", label: "Inicio" },
+    { icon: "👥", label: "Clientes" },
+    { icon: "🟨", label: "Membresías" },
+    { icon: "💳", label: "Pagos" },
+    { icon: "✅", label: "Asistencia" },
   ]},
   { section: "ADMINISTRACIÓN", items: [
-    { icon: "👤", label: "Usuarios"      },
-    { icon: "📊", label: "Reportes"      },
+    { icon: "👤", label: "Usuarios" },
+    { icon: "📊", label: "Reportes" },
     { icon: "⚙️", label: "Configuración" },
   ]},
 ];
 
-/* ── Datos de ejemplo basados en la Matriz de Accesos ── */
-const INITIAL_USUARIOS = [
-  { iniciales: "CM", nombre: "Carlos Mendez", email: "carlos.m@gymcontrol.pro", doc: "10203040", area: "Administrativa", rol: "Administrador General", rolKey: "admin", estado: "Activo", estadoType: "activo", permisos: "Acceso Total", bg: "#e8ff47" },
-  { iniciales: "LV", nombre: "Laura Victoria", email: "laura.v@gymcontrol.pro", doc: "10506070", area: "Recepción", rol: "Recepcionista", rolKey: "recepcion", estado: "Activo", estadoType: "activo", permisos: "Clientes, Pagos, Asistencia (Parcial)", bg: "#ffaa47" },
-  { iniciales: "ST", nombre: "Sergio Torres", email: "sergio.t@gymcontrol.pro", doc: "10809010", area: "Financiera", rol: "Auxiliar Financiero", rolKey: "financiero", estado: "Activo", estadoType: "activo", permisos: "Pagos y Reportes Financieros", bg: "#47c5ff" },
-  { iniciales: "BD", nombre: "Prof. Bruno Díaz", email: "bruno.d@gymcontrol.pro", doc: "10998877", area: "Entrenamiento", rol: "Entrenador", rolKey: "entrenador", estado: "Inactivo", estadoType: "inactivo", permisos: "Consulta de Clientes/Asistencias", bg: "#3dffa0" }
-];
-
 export default function Usuarios() {
   const navigate = useNavigate();
-  
-  // Estados para la gestión de datos
-  const [usuarios, setUsuarios] = useState(INITIAL_USUARIOS);
+  const [usuarios, setUsuarios] = useState([]);
   const [search, setSearch] = useState("");
   const [filterRol, setFilterRol] = useState("Todos");
-  
-  /* ── 2. ESTADO PARA LA NAVEGACIÓN ACTIVA ── */
   const [activeNav, setActiveNav] = useState("Usuarios");
-  
-  // Estados del Formulario (Crear / Editar)
+  const [loading, setLoading] = useState(true);
+
+  const sessionUser = JSON.parse(localStorage.getItem("usuario") || "{}");
+
   const [formData, setFormData] = useState({
+    id_usuario: null,
     nombre: "",
     email: "",
-    doc: "",
-    rolKey: "",
+    contrasena: "",
+    rolKey: "admin",
     estado: "Activo"
   });
   const [isEditing, setIsEditing] = useState(false);
 
-  // Manejar cambios en los inputs del formulario
+  // 1. CARGAR USUARIOS DE LA BASE DE DATOS
+  useEffect(() => {
+    fetchUsuarios();
+  }, []);
+
+  const fetchUsuarios = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/usuarios");
+      if (res.ok) {
+        const data = await res.json();
+        setUsuarios(data);
+      }
+    } catch (err) {
+      console.error("Error al obtener usuarios:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Enviar Formulario (Guardar / Actualizar)
-  const handleSubmit = (e) => {
+  // 2. CREAR / ACTUALIZAR EN BASE DE DATOS
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const rolesMap = {
-      admin: { rol: "Administrador General", area: "Administrativa", permisos: "Acceso Total", bg: "#e8ff47" },
-      recepcion: { rol: "Recepcionista", area: "Recepción", permisos: "Clientes, Pagos, Asistencia (Parcial)", bg: "#ffaa47" },
-      financiero: { rol: "Auxiliar Financiero", area: "Financiera", permisos: "Pagos y Reportes Financieros", bg: "#47c5ff" },
-      entrenador: { rol: "Entrenador", area: "Entrenamiento", permisos: "Consulta de Clientes/Asistencias", bg: "#3dffa0" }
+
+    const rolIdMap = { admin: 1, recepcion: 2, financiero: 3, entrenador: 4 };
+
+    const payload = {
+      nombre: formData.nombre,
+      correo: formData.email,
+      id_rol: rolIdMap[formData.rolKey] || 1,
+      contrasena: formData.contrasena || "123456" // Contraseña temporal si no se ingresa
     };
 
-    const roleConfig = rolesMap[formData.rolKey] || { rol: "Usuario", area: "General", permisos: "Lectura", bg: "#6b6d78" };
-    const initials = formData.nombre.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
+    try {
+      let response;
+      if (isEditing) {
+        // Petición de actualización (PUT)
+        response = await fetch(`http://localhost:5000/api/usuarios/${formData.id_usuario}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } else {
+        // Petición de creación (POST)
+        response = await fetch("http://localhost:5000/api/usuarios", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      }
 
-    if (isEditing) {
-      setUsuarios(usuarios.map(u => u.doc === formData.doc ? {
-        ...u,
-        nombre: formData.nombre,
-        email: formData.email,
-        rol: roleConfig.rol,
-        rolKey: formData.rolKey,
-        area: roleConfig.area,
-        permisos: roleConfig.permisos,
-        estado: formData.estado,
-        estadoType: formData.estado.toLowerCase(),
-        iniciales: initials,
-        bg: roleConfig.bg
-      } : u));
-      setIsEditing(false);
-    } else {
-      const nuevoUsuario = {
-        iniciales: initials,
-        nombre: formData.nombre,
-        email: formData.email,
-        doc: formData.doc,
-        area: roleConfig.area,
-        rol: roleConfig.rol,
-        rolKey: formData.rolKey,
-        estado: formData.estado,
-        estadoType: formData.estado.toLowerCase(),
-        permisos: roleConfig.permisos,
-        bg: roleConfig.bg
-      };
-      setUsuarios([...usuarios, nuevoUsuario]);
+      if (response.ok) {
+        fetchUsuarios(); // Recargar lista desde la BD
+        handleClearForm();
+      } else {
+        alert("Error al procesar la solicitud en el servidor.");
+      }
+    } catch (error) {
+      console.error("Error guardando usuario:", error);
     }
-
-    handleClearForm();
   };
 
-  // Cargar usuario para edición
-  const handleEditClick = (usuario) => {
+  const handleEditClick = (u) => {
     setIsEditing(true);
+    const rolKeys = { 1: "admin", 2: "recepcion", 3: "financiero", 4: "entrenador" };
     setFormData({
-      nombre: usuario.nombre,
-      email: usuario.email,
-      doc: usuario.doc,
-      rolKey: usuario.rolKey,
-      estado: usuario.estado
+      id_usuario: u.id_usuario,
+      nombre: u.nombre,
+      email: u.correo,
+      contrasena: "",
+      rolKey: rolKeys[u.id_rol] || "admin",
+      estado: u.estado || "Activo"
     });
   };
 
-  // Eliminar Usuario
-  const handleDeleteClick = (doc) => {
-    if (window.confirm("¿Está seguro de que desea eliminar este usuario del sistema?")) {
-      setUsuarios(usuarios.filter(u => u.doc !== doc));
+  // 3. ELIMINAR REGISTRO EN LA BD
+  const handleDeleteClick = async (id) => {
+    if (window.confirm("¿Está seguro de eliminar este usuario?")) {
+      try {
+        const response = await fetch(`http://localhost:5000/api/usuarios/${id}`, {
+          method: "DELETE"
+        });
+        if (response.ok) {
+          fetchUsuarios();
+        }
+      } catch (error) {
+        console.error("Error al eliminar:", error);
+      }
     }
   };
 
-  // Limpiar Formulario
   const handleClearForm = () => {
-    setFormData({ nombre: "", email: "", doc: "", rolKey: "", estado: "Activo" });
+    setFormData({ id_usuario: null, nombre: "", email: "", contrasena: "", rolKey: "admin", estado: "Activo" });
     setIsEditing(false);
   };
 
-  // Filtrado lógico de la lista
-  const filteredUsuarios = usuarios.filter(u => {
-    const matchesSearch = u.nombre.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase());
-    const matchesFilter = filterRol === "Todos" || u.rolKey === filterRol;
-    return matchesSearch && matchesFilter;
-  });
+  const handleLogout = () => {
+    localStorage.removeItem("usuario");
+    navigate("/", { replace: true });
+  };
 
   return (
     <div className="usr-root">
-      {/* SIDEBAR COMPARTIDO */}
       <aside className="usr-sidebar">
         <div className="cli-sidebar-brand">
           <span className="cli-brand-name">GYMCONTROL</span>
@@ -152,14 +159,14 @@ export default function Usuarios() {
                   className={`usr-nav-item ${activeNav === item.label ? "active" : ""}`}
                   onClick={() => {
                     setActiveNav(item.label);
-                    if (item.label === "Inicio")        navigate("/inicio");
-                    if (item.label === "Clientes")      navigate("/clientes");
-                    if (item.label === "Membresías")    navigate("/membresias");
-                    if (item.label === "Pagos")         navigate("/pagos");
-                    if (item.label === "Asistencia")    navigate("/asistencia");
-                    if (item.label === "Reportes")      navigate("/reportes");
+                    if (item.label === "Inicio") navigate("/inicio");
+                    if (item.label === "Clientes") navigate("/clientes");
+                    if (item.label === "Membresías") navigate("/membresias");
+                    if (item.label === "Pagos") navigate("/pagos");
+                    if (item.label === "Asistencia") navigate("/asistencia");
+                    if (item.label === "Reportes") navigate("/reportes");
                     if (item.label === "Configuración") navigate("/configuracion");
-                    if (item.label === "Usuarios")      navigate("/usuarios");
+                    if (item.label === "Usuarios") navigate("/usuarios");
                   }}
                 >
                   <span className="usr-nav-icon">{item.icon}</span>
@@ -170,24 +177,20 @@ export default function Usuarios() {
           ))}
         </nav>
 
-        {/* COMPONENTE DE USUARIO CORREGIDO CON SU PREFIJO 'usr-' */}
         <div className="usr-sidebar-user">
-          <div className="usr-avatar-footer">NN</div>
+          <div className="usr-avatar-footer">{sessionUser.nombre ? sessionUser.nombre.substring(0, 2).toUpperCase() : "ADM"}</div>
           <div className="usr-user-info">
-            <span className="usr-user-name">Neider Nuñez</span>
+            <span className="usr-user-name">{sessionUser.nombre || "Usuario"}</span>
             <span className="usr-user-role">Administrador</span>
           </div>
-          <button className="usr-user-menu">⋮</button>
+          <button className="usr-user-menu" onClick={handleLogout} title="Cerrar Sesión">🚪</button>
         </div>
       </aside>
 
-      {/* CONTENIDO PRINCIPAL */}
       <div className="usr-main">
-        {/* TOPBAR */}
         <header className="usr-topbar">
           <div className="usr-topbar-left">
             <h1 className="usr-page-title">Gestión de <span>Usuarios</span></h1>
-            <p className="usr-page-subtitle">Panel de control de accesos y asignación de roles jerárquicos</p>
           </div>
           <div className="usr-topbar-right">
             <div className="usr-search-wrapper">
@@ -202,191 +205,59 @@ export default function Usuarios() {
           </div>  
         </header>
 
-        {/* CONTENEDOR DE TRABAJO */}
         <div className="usr-container">
-          
-          {/* SECCIÓN IZQUIERDA: LISTADO */}
           <div className="usr-content-card">
-            <div className="usr-card-header">
-              <div className="usr-header-meta">
-                <h2 className="usr-card-title">Usuarios Registrados</h2>
-                <span className="usr-card-counter">{filteredUsuarios.length} usuarios encontrados</span>
-              </div>
-              
-              <div className="usr-filter-group">
-                {["Todos", "admin", "recepcion", "financiero", "entrenador"].map((rolKey) => (
-                  <button 
-                    key={rolKey}
-                    className={`usr-filter-chip ${filterRol === rolKey ? "active" : ""}`}
-                    onClick={() => setFilterRol(rolKey)}
-                  >
-                    {rolKey === "Todos" ? "Todos" : rolKey.toUpperCase()}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* TABLA DE USUARIOS */}
             <table className="usr-table">
               <thead>
                 <tr>
                   <th>Usuario</th>
-                  <th>Rol / Área</th>
-                  <th>Permisos Clave del Sistema</th>
-                  <th>Estado</th>
+                  <th>Correo</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredUsuarios.map((u) => (
-                  <tr key={u.doc}>
-                    <td>
-                      <div className="usr-info-cell">
-                        <div className="usr-avatar" style={{ backgroundColor: u.bg, color: u.rolKey === "admin" ? "#0A0A0A" : "var(--color-text)" }}>
-                          {u.iniciales}
-                        </div>
-                        <div>
-                          <div className="usr-name">{u.nombre}</div>
-                          <div className="usr-subtext">{u.email} • Doc: {u.doc}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span className={`usr-badge-rol ${u.rolKey}`}>
-                        {u.rol}
-                      </span>
-                      <div className="usr-area-subtext">{u.area}</div>
-                    </td>
-                    <td className="usr-permisos-cell">
-                      <code>{u.permisos}</code>
-                    </td>
-                    <td>
-                      <span className={`usr-estado usr-estado--${u.estadoType}`}>
-                        <span className="usr-estado-dot" />
-                        {u.estado}
-                      </span>
-                    </td>
+                {usuarios.map((u) => (
+                  <tr key={u.id_usuario}>
+                    <td>{u.nombre}</td>
+                    <td>{u.correo}</td>
                     <td>
                       <div className="usr-actions">
                         <button className="usr-btn usr-btn--edit" onClick={() => handleEditClick(u)}>✏️ Editar</button>
-                        {u.rolKey !== "admin" && (
-                          <button className="usr-btn usr-btn--delete" onClick={() => handleDeleteClick(u.doc)}>🗑️</button>
-                        )}
+                        <button className="usr-btn usr-btn--delete" onClick={() => handleDeleteClick(u.id_usuario)}>🗑️</button>
                       </div>
                     </td>
                   </tr>
                 ))}
-                {filteredUsuarios.length === 0 && (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: "center", padding: "40px", color: "var(--color-muted)" }}>
-                      No se encontraron usuarios con los criterios seleccionados.
-                    </td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>
 
-          {/* SECCIÓN DERECHA: PANEL DE FORMULARIO */}
           <div className="usr-side-panel">
             <h2 className="usr-panel-title">{isEditing ? "⚡ Editar Usuario" : "➕ Nuevo Usuario"}</h2>
-            <p className="usr-panel-subtitle">
-              {isEditing ? "Modifica los privilegios o credenciales del usuario seleccionado." : "Registra un nuevo miembro del equipo y asígnale un rol."}
-            </p>
-
             <form onSubmit={handleSubmit} className="usr-form">
               <div className="usr-form-group">
                 <label className="usr-label">Nombre Completo</label>
-                <input 
-                  type="text" 
-                  name="nombre" 
-                  className="usr-input" 
-                  placeholder="Ej. Andrea Gómez" 
-                  value={formData.nombre}
-                  onChange={handleInputChange}
-                  required 
-                />
-              </div>
-
-              <div className="usr-form-group">
-                <label className="usr-label">Documento de Identidad</label>
-                <input 
-                  type="text" 
-                  name="doc" 
-                  className="usr-input" 
-                  placeholder="Ej. 10452233" 
-                  value={formData.doc}
-                  onChange={handleInputChange}
-                  disabled={isEditing}
-                  required 
-                />
+                <input type="text" name="nombre" className="usr-input" value={formData.nombre} onChange={handleInputChange} required />
               </div>
 
               <div className="usr-form-group">
                 <label className="usr-label">Correo Institucional</label>
-                <input 
-                  type="email" 
-                  name="email" 
-                  className="usr-input" 
-                  placeholder="nombre@gymcontrol.pro" 
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required 
-                />
+                <input type="email" name="email" className="usr-input" value={formData.email} onChange={handleInputChange} required />
               </div>
 
-              <div className="usr-form-group">
-                <label className="usr-label">Rol Asignado (Nivel de Acceso)</label>
-                <select 
-                  name="rolKey" 
-                  className="usr-select" 
-                  value={formData.rolKey}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="" disabled>Seleccionar Rol...</option>
-                  <option value="admin">Administrador General (Acceso Total)</option>
-                  <option value="recepcion">Recepcionista (Operativo)</option>
-                  <option value="financiero">Auxiliar Financiero (Económico)</option>
-                  <option value="entrenador">Entrenador (Rutinas/Asistencia)</option>
-                </select>
-              </div>
-
-              <div className="usr-form-group">
-                <label className="usr-label">Estado de Cuenta</label>
-                <div className="usr-radio-group">
-                  <label className="usr-radio-label">
-                    <input 
-                      type="radio" 
-                      name="estado" 
-                      value="Activo" 
-                      checked={formData.estado === "Activo"} 
-                      onChange={handleInputChange}
-                    /> Activo
-                  </label>
-                  <label className="usr-radio-label">
-                    <input 
-                      type="radio" 
-                      name="estado" 
-                      value="Inactivo" 
-                      checked={formData.estado === "Inactivo"} 
-                      onChange={handleInputChange}
-                    /> Inactivo
-                  </label>
+              {!isEditing && (
+                <div className="usr-form-group">
+                  <label className="usr-label">Contraseña</label>
+                  <input type="password" name="contrasena" className="usr-input" value={formData.contrasena} onChange={handleInputChange} required />
                 </div>
-              </div>
+              )}
 
               <div className="usr-form-actions">
-                <button type="button" className="usr-btn-clear" onClick={handleClearForm}>
-                  Cancelar
-                </button>
-                <button type="submit" className="usr-btn-submit">
-                  {isEditing ? "Actualizar" : "Guardar Equipo"}
-                </button>
+                <button type="button" className="usr-btn-clear" onClick={handleClearForm}>Cancelar</button>
+                <button type="submit" className="usr-btn-submit">{isEditing ? "Actualizar" : "Guardar Equipo"}</button>
               </div>
             </form>
           </div>
-
         </div>
       </div>
     </div>

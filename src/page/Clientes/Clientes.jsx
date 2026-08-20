@@ -1,36 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Clientes.css";
 
-/* ── Datos de ejemplo ── */
-const CLIENTES = [
-  { iniciales: "LA", nombre: "Laura Arango", email: "laura@email.com",   doc: "1098765432", tel: "300 123 4567", plan: "Mensual",     planType: "mensual",    estado: "Activo",    estadoType: "activo",   vence: "30 Jun 2025", alerta: false, bg: "#3b82f6" },
-  { iniciales: "CM", nombre: "Carlos Mejía",  email: "cmejia@email.com",  doc: "1023456789", tel: "315 987 6543", plan: "Trimestral",  planType: "trimestral", estado: "Activo",    estadoType: "activo",   vence: "15 Ago 2025", alerta: false, bg: "#3b82f6" },
-  { iniciales: "MP", nombre: "María Pérez",   email: "mperez@email.com",  doc: "1087654321", tel: "312 456 7890", plan: "Mensual",     planType: "vencido",    estado: "Vencido",   estadoType: "vencido",  vence: "01 Jun 2025", alerta: true,  bg: "#ef4444" },
-  { iniciales: "JG", nombre: "Jorge García",  email: "jgarcia@email.com", doc: "1056789012", tel: "318 321 0987", plan: "Semestral",   planType: "semestral",  estado: "Activo",    estadoType: "activo",   vence: "20 Nov 2025", alerta: false, bg: "#f97316" },
-  { iniciales: "SR", nombre: "Sofia Ríos",    email: "srios@email.com",   doc: "1034567890", tel: "316 654 3210", plan: "— Sin asignar", planType: "sin-asignar", estado: "Inactivo", estadoType: "inactivo", vence: "—",          alerta: false, bg: "#a855f7" },
-];
-
 const FILTERS = [
-  { label: "Todos",     count: 347, value: "todos" },
-  { label: "Activos",   count: 298, value: "activos" },
-  { label: "Inactivos", count: 49,  value: "inactivos" },
-  { label: "Vencidos",  count: 49,  value: "vencidos" },
+  { label: "Todos", value: "todos" },
+  { label: "Activos", value: "activos" },
+  { label: "Inactivos", value: "inactivos" },
+  { label: "Vencidos", value: "vencidos" },
 ];
 
 const NAV_ITEMS = [
   { section: "PRINCIPAL", items: [
-    { icon: "◎", label: "Inicio",   active: false },
-    { icon: "👥", label: "Clientes",    active: true  },
-    { icon: "🟨", label: "Membresías",  active: false },
-    { icon: "💳", label: "Pagos",       active: false },
-    { icon: "✅", label: "Asistencia",  active: false },
+    { icon: "◎", label: "Inicio" },
+    { icon: "👥", label: "Clientes" },
+    { icon: "🟨", label: "Membresías" },
+    { icon: "💳", label: "Pagos" },
+    { icon: "✅", label: "Asistencia" },
   ]},
   { section: "ADMINISTRACIÓN", items: [
-    { icon: "👥", label: "Usuarios", active: false },
-    { icon: "📊", label: "Reportes",     active: false },
-    { icon: "⚙️", label: "Configuración", active: false },
-
+    { icon: "👥", label: "Usuarios" },
+    { icon: "📊", label: "Reportes" },
+    { icon: "⚙️", label: "Configuración" },
   ]},
 ];
 
@@ -38,11 +28,67 @@ export default function Clientes() {
   const [activeNav, setActiveNav] = useState("Clientes");
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("todos");
+  
+  // 1. ESTADOS DINÁMICOS DESDE API
+  const [clientes, setClientes] = useState([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // Obtener usuario autenticado de la sesión
+  const sessionUser = JSON.parse(localStorage.getItem("usuario") || "{}");
+
+  // 2. PETICIÓN HTTP A LA BD
+  useEffect(() => {
+    fetchClientes();
+  }, []);
+
+  const fetchClientes = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/usuarios");
+      if (response.ok) {
+        const data = await response.json();
+        // Mapeo seguro de atributos según la estructura de BD
+        const MappedData = data.map(c => ({
+          id: c.id_usuario,
+          nombre: c.nombre || "Sin Nombre",
+          email: c.correo || "Sin Correo",
+          doc: c.id_usuario?.toString() || "—",
+          tel: c.telefono || "—",
+          plan: c.plan || "Sin asignar",
+          planType: (c.plan || "sin-asignar").toLowerCase(),
+          estado: c.estado || "Activo",
+          estadoType: (c.estado || "activo").toLowerCase(),
+          vence: c.fecha_vencimiento || "—",
+          alerta: c.estado === "Vencido",
+          bg: "#3b82f6",
+          iniciales: (c.nombre || "NN").split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2)
+        }));
+        setClientes(MappedData);
+      }
+    } catch (error) {
+      console.error("Error cargando clientes:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 3. LOGOUT
+  const handleLogout = () => {
+    localStorage.removeItem("usuario");
+    navigate("/", { replace: true });
+  };
+
+  // 4. FILTRADO DINÁMICO (BÚSQUEDA + BOTONES)
+  const filteredClientes = clientes.filter((c) => {
+    const matchSearch = c.nombre.toLowerCase().includes(search.toLowerCase()) || c.doc.includes(search);
+    if (activeFilter === "activos") return matchSearch && c.estadoType === "activo";
+    if (activeFilter === "inactivos") return matchSearch && c.estadoType === "inactivo";
+    if (activeFilter === "vencidos") return matchSearch && c.estadoType === "vencido";
+    return matchSearch;
+  });
 
   return (
     <div className="cli-root">
-
-      {/* ════ SIDEBAR ════ */}
       <aside className="cli-sidebar">
         <div className="cli-sidebar-brand">
           <span className="cli-brand-name">GYMCONTROL</span>
@@ -50,47 +96,44 @@ export default function Clientes() {
         </div>
 
         <nav className="cli-nav">
-        {NAV_ITEMS.map((group) => (
-          <div key={group.section} className="cli-nav-group">
-            <span className="cli-nav-section">{group.section}</span>
-            {group.items.map((item) => (
-              <button
-                key={item.label}
-                className={`cli-nav-item ${activeNav === item.label ? "active" : ""}`}
-                onClick={() => {
-                  setActiveNav(item.label);
-                  if (item.label === "Inicio")        navigate("/inicio");
-                  if (item.label === "Clientes")      navigate("/clientes");
-                  if (item.label === "Membresías")    navigate("/membresias");
-                  if (item.label === "Pagos")         navigate("/pagos");
-                  if (item.label === "Asistencia")    navigate("/asistencia");
-                  if (item.label === "Reportes")      navigate("/reportes");
-                  if (item.label === "Configuración") navigate("/configuracion");
-                  if (item.label === "Usuarios") navigate("/usuarios");
-                }}
-              >
-                <span className="cli-nav-icon">{item.icon}</span>
-                {item.label}
-              </button>
-            ))}
-          </div>
-        ))}
-      </nav>
+          {NAV_ITEMS.map((group) => (
+            <div key={group.section} className="cli-nav-group">
+              <span className="cli-nav-section">{group.section}</span>
+              {group.items.map((item) => (
+                <button
+                  key={item.label}
+                  className={`cli-nav-item ${activeNav === item.label ? "active" : ""}`}
+                  onClick={() => {
+                    setActiveNav(item.label);
+                    if (item.label === "Inicio") navigate("/inicio");
+                    if (item.label === "Clientes") navigate("/clientes");
+                    if (item.label === "Membresías") navigate("/membresias");
+                    if (item.label === "Pagos") navigate("/pagos");
+                    if (item.label === "Asistencia") navigate("/asistencia");
+                    if (item.label === "Reportes") navigate("/reportes");
+                    if (item.label === "Configuración") navigate("/configuracion");
+                    if (item.label === "Usuarios") navigate("/usuarios");
+                  }}
+                >
+                  <span className="cli-nav-icon">{item.icon}</span>
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          ))}
+        </nav>
 
         <div className="cli-sidebar-user">
-          <div className="cli-avatar">NN</div>
+          <div className="cli-avatar">{sessionUser.nombre ? sessionUser.nombre.substring(0, 2).toUpperCase() : "ADM"}</div>
           <div className="cli-user-info">
-            <span className="cli-user-name">Neider Nuñez</span>
-            <span className="cli-user-role">Administrador</span>
+            <span className="cli-user-name">{sessionUser.nombre || "Usuario"}</span>
+            <span className="cli-user-role">{sessionUser.id_rol === 1 ? "Administrador" : "Recepción"}</span>
           </div>
-          <button className="cli-user-menu">⋮</button>
+          <button className="cli-user-menu" title="Cerrar Sesión" onClick={handleLogout}>🚪</button>
         </div>
       </aside>
 
-      {/* ════ CONTENIDO PRINCIPAL ════ */}
       <div className="cli-main">
-
-        {/* Topbar */}
         <header className="cli-topbar">
           <h1 className="cli-page-title">CLIENTES</h1>
           <div className="cli-topbar-right">
@@ -100,16 +143,15 @@ export default function Clientes() {
                 type="text"
                 className="cli-search-input"
                 placeholder="Buscar por nombre o doc..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             <button className="cli-new-btn">+ NUEVO CLIENTE</button>
           </div>
         </header>
 
-        {/* Contenido scrolleable */}
         <div className="cli-content">
-
-          {/* Filtros */}
           <div className="cli-filters">
             {FILTERS.map((f) => (
               <button
@@ -117,78 +159,68 @@ export default function Clientes() {
                 className={`cli-filter-btn ${activeFilter === f.value ? "active" : ""}`}
                 onClick={() => setActiveFilter(f.value)}
               >
-                {f.label} ({f.count})
+                {f.label}
               </button>
             ))}
           </div>
 
-          {/* Tabla */}
           <div className="cli-table-card">
-            <table className="cli-table">
-              <thead>
-                <tr>
-                  <th>CLIENTE</th>
-                  <th>DOCUMENTO</th>
-                  <th>TELÉFONO</th>
-                  <th>MEMBRESÍA</th>
-                  <th>ESTADO</th>
-                  <th>VENCE</th>
-                  <th>ACCIONES</th>
-                </tr>
-              </thead>
-              <tbody>
-                {CLIENTES.map((c) => (
-                  <tr key={c.doc}>
-                    <td>
-                      <div className="cli-cell-cliente">
-                        <div className="cli-avatar-table" style={{ backgroundColor: c.bg }}>
-                          {c.iniciales}
-                        </div>
-                        <div className="cli-cliente-info">
-                          <span className="cli-cliente-nombre">{c.nombre}</span>
-                          <span className="cli-cliente-email">{c.email}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="cli-doc">{c.doc}</td>
-                    <td className="cli-tel">{c.tel}</td>
-                    <td>
-                      <span className={`cli-tag cli-tag--${c.planType}`}>{c.plan}</span>
-                    </td>
-                    <td>
-                      <span className={`cli-estado cli-estado--${c.estadoType}`}>
-                        <span className="cli-estado-dot" />
-                        {c.estado}
-                      </span>
-                    </td>
-                    <td className={`cli-vence ${c.alerta ? "cli-vence--alerta" : ""}`}>
-                      {c.vence} {c.alerta && "⚠️"}
-                    </td>
-                    <td>
-                      <div className="cli-actions">
-                        <button className="cli-btn cli-btn--ver" onClick={() => navigate(`/clientes/${c.doc}`)}>Ver</button>
-                        <button className="cli-btn cli-btn--icon cli-btn--edit">✏️</button>
-                        <button className="cli-btn cli-btn--icon cli-btn--delete">🗑️</button>
-                      </div>
-                    </td>
+            {loading ? (
+              <p style={{ padding: "20px", textAlign: "center" }}>Cargando clientes...</p>
+            ) : (
+              <table className="cli-table">
+                <thead>
+                  <tr>
+                    <th>CLIENTE</th>
+                    <th>DOCUMENTO</th>
+                    <th>TELÉFONO</th>
+                    <th>MEMBRESÍA</th>
+                    <th>ESTADO</th>
+                    <th>VENCE</th>
+                    <th>ACCIONES</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-
-            {/* Paginación */}
-            <div className="cli-pagination">
-              <span className="cli-pagination-info">Mostrando 1–5 de 347 clientes</span>
-              <div className="cli-pagination-pages">
-                <button className="cli-page-btn active">1</button>
-                <button className="cli-page-btn">2</button>
-                <button className="cli-page-btn">3</button>
-                <span className="cli-page-dots">...</span>
-                <button className="cli-page-btn">70</button>
-              </div>
-            </div>
+                </thead>
+                <tbody>
+                  {filteredClientes.map((c) => (
+                    <tr key={c.id}>
+                      <td>
+                        <div className="cli-cell-cliente">
+                          <div className="cli-avatar-table" style={{ backgroundColor: c.bg }}>
+                            {c.iniciales}
+                          </div>
+                          <div className="cli-cliente-info">
+                            <span className="cli-cliente-nombre">{c.nombre}</span>
+                            <span className="cli-cliente-email">{c.email}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="cli-doc">{c.doc}</td>
+                      <td className="cli-tel">{c.tel}</td>
+                      <td>
+                        <span className={`cli-tag cli-tag--${c.planType}`}>{c.plan}</span>
+                      </td>
+                      <td>
+                        <span className={`cli-estado cli-estado--${c.estadoType}`}>
+                          <span className="cli-estado-dot" />
+                          {c.estado}
+                        </span>
+                      </td>
+                      <td className={`cli-vence ${c.alerta ? "cli-vence--alerta" : ""}`}>
+                        {c.vence} {c.alerta && "⚠️"}
+                      </td>
+                      <td>
+                        <div className="cli-actions">
+                          <button className="cli-btn cli-btn--ver" onClick={() => navigate(`/clientes/${c.id}`)}>Ver</button>
+                          <button className="cli-btn cli-btn--icon cli-btn--edit">✏️</button>
+                          <button className="cli-btn cli-btn--icon cli-btn--delete">🗑️</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
-
         </div>
       </div>
     </div>
