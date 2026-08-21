@@ -83,16 +83,16 @@ export default function Login() {
             </div>
 
             <div className="login-pitch">
-              <p className="login-pitch-line">Gestiona tu gimnasio</p>
-              <p className="login-pitch-accent">con control total.</p>
+              <p className="login-pitch-line">Más Que Un Gimnasio</p>
+              <p className="login-pitch-accent">Una experiencia conectada.</p>
             </div>
 
             <ul className="login-feature-list">
               {[
-                "Gestión de clientes y membresías",
-                "Control de asistencias en tiempo real",
-                "Reportes financieros automáticos",
-                "Acceso por roles y permisos",
+                "Consulta tu progreso desde cualquier lugar",
+                "Gestiona pagos y membresías fácilmente",
+                "Mantente informado en tiempo real",
+                "Acceso personalizado para cada usuario",
               ].map((f) => (
                 <li key={f} className="login-feature-item">
                   <span className="login-bullet">•</span>
@@ -100,10 +100,22 @@ export default function Login() {
                 </li>
               ))}
             </ul>
+             
+
+    <div className="login-frase">
+              <p className="login-frase-text">"Cada entrenamiento comienza</p>
+              <p className="login-frase-text2">con una buena organización."</p>
+            </div>
+
+    
+
+
           </div>
 
           <div className="login-watermark">KG</div>
         </div>
+      
+
 
         {/* ── Panel derecho ── */}
         <div className="login-right">

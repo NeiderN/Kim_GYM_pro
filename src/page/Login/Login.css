@@ -313,6 +313,17 @@
   font-weight: 700;
 }
 
+.login-frase {
+  flex-direction: column;
+  position: relative;
+  display: flex;
+  font-style: italic;
+  line-height: 1.6;
+  font-size: 15px;
+  font-weight: 500;
+  color:#8B90A7;
+}
+
 .login-role-icon {
   font-size: 15px;
 }
